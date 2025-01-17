@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Find Users</title>
+</head>
+<body>
+    <h1>Find All the Users!!</h1>
+    <div>
+        <a href="/users/new">Add Yourself In!!</a>
+    </div>
+    <ul>
+        <% for( let user of users) { %>
+            <li><a href="users/<%= user._id %>"><%= user.fullName %></a></li>
+        <% } %>
+    </ul>
+</body>
+</html>

@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>New User</title>
+</head>
+<body>
+    <form action="/users" method="post">
+        <div>
+            <label for="name">Full Name</label>
+            <input type="text" id="name" name="user[fullName]"> <!-- Use 'fullName' -->
+        </div>
+        <div>
+            <label for="email">Email Address</label>
+            <input type="email" id="email" name="user[email]">
+        </div>
+        <div>
+            <label for="hobbies">Favourite Hobby</label>
+            <input type="text" id="hobbies" name="user[hobbies]"> <!-- Use 'hobbies' -->
+        </div>
+        <div>
+            <label for="location">Location</label>
+            <input type="text" id="location" name="user[location]">
+        </div>
+        <div>
+            <label for="password">Password</label>
+            <input type="password" id="password" name="user[password]">
+        </div>
+        <button>Sign Me Up!!</button>
+    </form>
+    <footer>
+        <a href="/users">All Users!!</a>
+    </footer>
+</body>
+</html>
