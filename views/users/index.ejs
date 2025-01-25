@@ -11,8 +11,8 @@
         <a href="/users/new">Add Yourself In!!</a>
     </div>
     <ul>
-        <% for( let user of users) { %>
-            <li><a href="users/<%= user._id %>"><%= user.fullName %></a></li>
+        <% for (let user of users) { %>
+            <li><a href="/users/<%= user._id %>"><%= user.fullName %></a></li> 
         <% } %>
     </ul>
 </body>

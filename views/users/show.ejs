@@ -3,13 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Show</title>
+    <title>Show User</title>
 </head>
 <body>
     <h1><%= user.fullName %>!</h1>
     <h2><%= user.location %></h2>
     <footer>
-        <a href="/users/<%= user._id %>/edit">Edit User</a><br>
+        <a href="/<%= user._id %>/edit">Edit User</a><br>
+        <form action="/users/<%= user._id %>?_method=DELETE" method="POST">
+            <button>Delete</button>
+        </form>
         <a href="/users">All Users</a>
     </footer>
 </body>
