@@ -27,6 +27,8 @@ const generateRandomUsers = async () => {
             password: faker.internet.password(),
             salt: faker.string.alphanumeric(10),
             hobbies: Array.from(hobbiesSet), 
+            profileImageURL: `https://picsum.photos/400?random=${Math.random()}`,
+            description: "lorem-ipsum blah blah blah................"
         };
     });
 

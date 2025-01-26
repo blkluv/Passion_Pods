@@ -1,6 +1,8 @@
 <% layout('layouts/boilerplate')  %>
     <h1><%= user.fullName %>!</h1>
     <h2><%= user.location %></h2>
+    <img src="<%= user.profileImageURL %>" alt="Profile-Pic">
+    <p><%= user.description %></p>
     <footer>
         <a href="/users/<%= user._id %>/edit">Edit User</a><br>
         <form action="/users/<%= user._id %>?_method=DELETE" method="POST">

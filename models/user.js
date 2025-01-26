@@ -29,6 +29,9 @@ const userSchema = new Schema({
         type: [String], 
         default: [],    
     },
+    description: {
+        type: String,
+    },
 }, { timestamps: true });
 
 const User = model("User", userSchema); 
