@@ -1,27 +1,40 @@
 <% layout('layouts/boilerplate')  %>
-    <form action="/users" method="post">
-        <div>
-            <label for="name">Full Name</label>
-            <input type="text" id="name" name="user[fullName]"> <!-- Use 'fullName' -->
-        </div>
-        <div>
-            <label for="email">Email Address</label>
-            <input type="email" id="email" name="user[email]">
-        </div>
-        <div>
-            <label for="hobbies">Favourite Hobby</label>
-            <input type="text" id="hobbies" name="user[hobbies]"> <!-- Use 'hobbies' -->
-        </div>
-        <div>
-            <label for="location">Location</label>
-            <input type="text" id="location" name="user[location]">
-        </div>
-        <div>
-            <label for="password">Password</label>
-            <input type="password" id="password" name="user[password]">
-        </div>
-        <button>Sign Me Up!!</button>
-    </form>
-    <footer>
-        <a href="/users">All Users!!</a>
-    </footer>
+<div class="row">
+    <h1 class="text-center">New User</h1>
+    <div class="col-6 offset-3">
+        <form action="/users" method="post">
+            <div class="mb-3">
+                <label class = "form-label" for="name">Full Name</label>
+                <input class="form-control" type="text" id="name" name="user[fullName]"> <!-- Use 'fullName' -->
+            </div>
+            <div class="mb-3">
+                <label class = "form-label" for="email">Email Address</label>
+                <input class="form-control" type="email" id="email" name="user[email]">
+            </div>
+            <div class="mb-3">
+                <label class="form-label" for="hobbies">Favourite Hobby</label>
+                <input class="form-control" type="text" id="hobbies" name="user[hobbies]"> <!-- Use 'hobbies' -->
+            </div>
+            <div class="mb-3">
+                <label class = "form-label" for="location">Location</label>
+                <input class="form-control" type="text" id="location" name="user[location]">
+            </div>
+            <div class="mb-3">
+                <label class = "form-label" for="password">Password</label>
+                <input class="form-control" type="password" id="password" name="user[password]">
+            </div>
+            <div class="mb-3">
+                <label class = "form-label" for="image">Profile Image URL</label>
+                <input class="form-control" type="text" id="image" name="user[profileImageURL]">
+            </div>
+            <div class="mb-3">
+                <label class = "form-label" for="description">Description</label>
+                <textarea class="form-control" type="text" id="description" name="user[description]"></textarea>
+            </div>
+            <div class="mb-3"><button class="btn btn-success">Sign Me Up!!</button></div>
+        </form>
+        <footer>
+            <a href="/users">All Users!!</a>
+        </footer>    
+    </div>
+</div>
