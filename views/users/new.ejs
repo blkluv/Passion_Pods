@@ -2,34 +2,41 @@
 <div class="row">
     <h1 class="text-center">New User</h1>
     <div class="col-6 offset-3">
-        <form action="/users" method="post">
+        <form action="/users" method="post" novalidate class="validated-form">
             <div class="mb-3">
                 <label class = "form-label" for="name">Full Name</label>
-                <input class="form-control" type="text" id="name" name="user[fullName]"> <!-- Use 'fullName' -->
+                <input class="form-control" type="text" id="name" name="user[fullName]" required> <!-- Use 'fullName' -->
+                <div class="valid-feedback">Looks Good!!</div>
             </div>
             <div class="mb-3">
                 <label class = "form-label" for="email">Email Address</label>
-                <input class="form-control" type="email" id="email" name="user[email]">
+                <input class="form-control" type="email" id="email" name="user[email]" required> 
+                <div class="valid-feedback">Looks Good!!</div>
             </div>
             <div class="mb-3">
                 <label class="form-label" for="hobbies">Favourite Hobby</label>
-                <input class="form-control" type="text" id="hobbies" name="user[hobbies]"> <!-- Use 'hobbies' -->
+                <input class="form-control" type="text" id="hobbies" name="user[hobbies]" required> <!-- Use 'hobbies' -->
+                <div class="valid-feedback">Looks Good!!</div>
             </div>
             <div class="mb-3">
                 <label class = "form-label" for="location">Location</label>
-                <input class="form-control" type="text" id="location" name="user[location]">
+                <input class="form-control" type="text" id="location" name="user[location]" required>
+                <div class="valid-feedback">Looks Good!!</div>
             </div>
             <div class="mb-3">
                 <label class = "form-label" for="password">Password</label>
-                <input class="form-control" type="password" id="password" name="user[password]">
+                <input class="form-control" type="password" id="password" name="user[password]" required>
+                <div class="valid-feedback">Looks Good!!</div>
             </div>
             <div class="mb-3">
                 <label class = "form-label" for="image">Profile Image URL</label>
-                <input class="form-control" type="text" id="image" name="user[profileImageURL]">
+                <input class="form-control" type="text" id="image" name="user[profileImageURL]" required>
+                <div class="valid-feedback">Looks Good!!</div>
             </div>
             <div class="mb-3">
                 <label class = "form-label" for="description">Description</label>
-                <textarea class="form-control" type="text" id="description" name="user[description]"></textarea>
+                <textarea class="form-control" type="text" id="description" name="user[description]" required></textarea>
+                <div class="valid-feedback">Looks Good!!</div>
             </div>
             <div class="mb-3"><button class="btn btn-success">Sign Me Up!!</button></div>
         </form>
@@ -38,3 +45,24 @@
         </footer>    
     </div>
 </div>
+
+<script>
+    (() => {
+  'use strict'
+
+  // Fetch all the forms we want to apply custom Bootstrap validation styles to
+  const forms = document.querySelectorAll('.validated-form')
+
+  // Loop over them and prevent submission
+  Array.from(forms).forEach(form => {
+    form.addEventListener('submit', event => {
+      if (!form.checkValidity()) {
+        event.preventDefault()
+        event.stopPropagation()
+      }
+
+      form.classList.add('was-validated')
+    }, false)
+  })
+})()
+</script>
