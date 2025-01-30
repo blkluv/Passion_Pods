@@ -4,10 +4,23 @@ const path = require("path");
 const mongoose = require("mongoose");
 const ejsMate = require("ejs-mate");
 const catchAsync = require('./utils/catchAsync.js');
+const ExpressError = require('./utils/ExpressError.js');
+const Joi = require('joi');
 require("dotenv").config();
 const User = require("./models/user.js");
 const methodOverride = require("method-override");
-
+const {userSchema} = require('./schemas.js');
+const {isValidUrl} = require("./utils/helper.js");
+const validateUser = (req, res, next) => {
+    const {error} = userSchema.validate(req.body);
+    if(error){
+        const msg = error.details.map(el=>el.message).join(',');
+        throw new ExpressError(msg, 400);
+    }
+    else{
+        next();
+    }
+}
 mongoose
     .connect(process.env.MONGO_URL)
     .then(() => console.log("MongoDB connected!"))
@@ -37,11 +50,16 @@ app.get("/users/new", (req, res) => {
 });
 
 // Create New User
-app.post("/users", catchAsync(async (req, res, next) => {
-    const user = new User(req.body.user);
-    await user.save();
-    res.redirect(`/users/${user._id}`); // Redirect correctly
+app.post("/users", validateUser, catchAsync(async (req, res, next) => {
+    const { user } = req.body;
+    if (user.profileImageURL && !isValidUrl(user.profileImageURL)) {
+        throw new ExpressError("Invalid image URL provided", 400);
+    }
+    const newUser = new User(user);
+    await newUser.save();
+    res.redirect(`/users/${newUser._id}`);
 }));
+
 
 // Show User Route
 app.get("/users/:id", async (req, res) => {
@@ -62,11 +80,16 @@ app.get("/users/:id/edit", catchAsync(async (req, res) => {
 }));
 
 // Update User
-app.put("/users/:id", catchAsync(async (req, res) => {
+app.put("/users/:id", validateUser, catchAsync(async (req, res) => {
     const { id } = req.params;
-    const user = await User.findByIdAndUpdate(id, { ...req.body.user });
-    res.redirect(`/users/${id}`); 
+    const { user } = req.body;
+    if (user.profileImageURL && !isValidUrl(user.profileImageURL)) {
+        throw new ExpressError("Invalid image URL provided", 400);
+    }
+    await User.findByIdAndUpdate(id, { ...user });
+    res.redirect(`/users/${id}`);
 }));
+
 
 // Delete User
 app.delete("/users/:id", catchAsync(async (req, res) => {
@@ -75,8 +98,14 @@ app.delete("/users/:id", catchAsync(async (req, res) => {
     res.redirect("/users");
 }));
 
+app.all('*', (req,res,next)=>{
+    next(new ExpressError("Page Not Found!", 404));
+})
+
 app.use((err, req, res, next) => {
-    ressend("Oh boy, something went wrong!!");
+    const {statusCode = 500, message} = err;
+    if(!err.message)err.message = "Oh No!! Something Went Wrong!";
+    res.status(statusCode).render('error', {err}); 
 })
 
 app.listen(5000, () => {
