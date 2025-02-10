@@ -73,13 +73,13 @@ app.post("/users", validateUser, catchAsync(async (req, res, next) => {
 
 
 // Show User Route
-app.get("/users/:id", async (req, res) => {
-    const user = await User.findById(req.params.id);
+app.get("/users/:id", catchAsync(async (req, res) => {
+    const user = await User.findById(req.params.id).populate('reviews');
     if (!user) {
         return res.status(404).send("User not found");
     }
     res.render("users/show", { user });
-});
+}));
 
 // Edit User Form Route
 app.get("/users/:id/edit", catchAsync(async (req, res) => {
@@ -117,6 +117,15 @@ app.post("/users/:id/reviews", validateReview, catchAsync(async (req,res) => {
     await user.save();
     res.redirect(`/users/${user._id}`);
 }))
+
+app.delete("/users/:id/reviews/:reviewId", catchAsync(async (req, res) => {
+    const {id, reviewId} = req.params;
+    await User.findByIdAndUpdate(id, {$pull:{reviews:reviewId}});
+    await Review.findByIdAndDelete(reviewId);
+    res.redirect(`/users/${id}`);
+}));
+
+
 app.all('*', (req,res,next)=>{
     next(new ExpressError("Page Not Found!", 404));
 })

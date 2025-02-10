@@ -1,6 +1,6 @@
 <% layout('layouts/boilerplate')  %>
 <div class="row">
-    <div class="col-6 offset-3">
+    <div class="col-6 ">
         <div class="card mb-3">
             <img src="<%= user.profileImageURL %>" alt="Profile-Pic" class="card-img-top">
             <div class="card-body">
@@ -19,7 +19,9 @@
               <a href="/users" class="card-link btn btn-success">All Users</a>
             </div>
           </div>
-          <h2>Leave a Review</h2>
+    </div>
+    <div class="col-6">
+      <h2>Leave a Review</h2>
           <form action="/users/<%= user._id %>/reviews" method="POST" class="mb-3 validated-form" novalidate>
             <div class="mb-3">
               <label class="form-label" for="rating">Rating</label>
@@ -28,11 +30,20 @@
             <div class="mb-3">
               <label class="form-label" for="body">Review</label>
               <textarea class="form-control" name="review[body]" id="body" cols="30" rows="3" required></textarea>
-            </div>
-            <div class="valid-feeback">
-              Looks good!
+              <div class="valid-feedback">Looks Good!!</div>      
             </div>
             <button class="btn btn-success">Submit</button>
           </form>
+          <% for (let review of user.reviews) { %>
+            <div class="card mb-3">
+              <div class="card-body">
+                <h5 class="card-title">Rating: <%= review.rating %></h5>
+                <p class="card-text">Review: <%= review.body %></p>
+                <form action="/users/<%= user._id %>/reviews/<%= review._id %>?_method=DELETE" method="POST">
+                  <button class="btn btn-sm btn-danger">Delete!</button>
+                </form>
+              </div>
+            </div>
+          <% } %>
     </div>
 </div>
