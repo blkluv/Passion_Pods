@@ -6,13 +6,24 @@ const ejsMate = require("ejs-mate");
 const catchAsync = require('./utils/catchAsync.js');
 const ExpressError = require('./utils/ExpressError.js');
 const Joi = require('joi');
+const Review = require("./models/review.js");
 require("dotenv").config();
 const User = require("./models/user.js");
 const methodOverride = require("method-override");
-const {userSchema} = require('./schemas.js');
+const {userSchema, reviewSchema} = require('./schemas.js');
 const {isValidUrl} = require("./utils/helper.js");
 const validateUser = (req, res, next) => {
     const {error} = userSchema.validate(req.body);
+    if(error){
+        const msg = error.details.map(el=>el.message).join(',');
+        throw new ExpressError(msg, 400);
+    }
+    else{
+        next();
+    }
+}
+const validateReview = (req, res, next) => {
+    const {error} = reviewSchema.validate(req.body);
     if(error){
         const msg = error.details.map(el=>el.message).join(',');
         throw new ExpressError(msg, 400);
@@ -98,6 +109,14 @@ app.delete("/users/:id", catchAsync(async (req, res) => {
     res.redirect("/users");
 }));
 
+app.post("/users/:id/reviews", validateReview, catchAsync(async (req,res) => {
+    const user = await User.findById(req.params.id);
+    const review = new Review(req.body.review);
+    user.reviews.push(review);
+    await review.save();
+    await user.save();
+    res.redirect(`/users/${user._id}`);
+}))
 app.all('*', (req,res,next)=>{
     next(new ExpressError("Page Not Found!", 404));
 })

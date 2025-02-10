@@ -31,6 +31,12 @@ const userSchema = new Schema({
     description: {
         type: String,
     },
+    reviews: [
+        {
+            type:Schema.Types.ObjectId,
+            ref: 'Review',
+        }
+    ]
 }, { timestamps: true });
 
 const User = model("User", userSchema); 
