@@ -12,26 +12,10 @@ const User = require("./models/user.js");
 const methodOverride = require("method-override");
 const {userSchema, reviewSchema} = require('./schemas.js');
 const {isValidUrl} = require("./utils/helper.js");
-const validateUser = (req, res, next) => {
-    const {error} = userSchema.validate(req.body);
-    if(error){
-        const msg = error.details.map(el=>el.message).join(',');
-        throw new ExpressError(msg, 400);
-    }
-    else{
-        next();
-    }
-}
-const validateReview = (req, res, next) => {
-    const {error} = reviewSchema.validate(req.body);
-    if(error){
-        const msg = error.details.map(el=>el.message).join(',');
-        throw new ExpressError(msg, 400);
-    }
-    else{
-        next();
-    }
-}
+
+const users = require("./routes/users.js");
+const reviews = require("./routes/review.js");
+
 mongoose
     .connect(process.env.MONGO_URL)
     .then(() => console.log("MongoDB connected!"))
@@ -43,87 +27,15 @@ app.set("views", path.join(__dirname, "views"));
 app.engine('ejs', ejsMate);
 app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride("_method"));
+app.use(express.static(path.join(__dirname, 'public')));
+
+app.use('/users',users);
+app.use('/users/:id/reviews',reviews);
 
 // Home Route
 app.get("/", (req, res) => {
     res.render("home");
 });
-
-// Users Index Route
-app.get("/users", catchAsync(async (req, res) => {
-    const users = await User.find({});
-    res.render("users/index", { users });
-}));
-
-// New User Form Route
-app.get("/users/new", (req, res) => {
-    res.render("users/new");
-});
-
-// Create New User
-app.post("/users", validateUser, catchAsync(async (req, res, next) => {
-    const { user } = req.body;
-    if (user.profileImageURL && !isValidUrl(user.profileImageURL)) {
-        throw new ExpressError("Invalid image URL provided", 400);
-    }
-    const newUser = new User(user);
-    await newUser.save();
-    res.redirect(`/users/${newUser._id}`);
-}));
-
-
-// Show User Route
-app.get("/users/:id", catchAsync(async (req, res) => {
-    const user = await User.findById(req.params.id).populate('reviews');
-    if (!user) {
-        return res.status(404).send("User not found");
-    }
-    res.render("users/show", { user });
-}));
-
-// Edit User Form Route
-app.get("/users/:id/edit", catchAsync(async (req, res) => {
-    const user = await User.findById(req.params.id);
-    if (!user) {
-        return res.status(404).send("User not found");
-    }
-    res.render("users/edit", { user });
-}));
-
-// Update User
-app.put("/users/:id", validateUser, catchAsync(async (req, res) => {
-    const { id } = req.params;
-    const { user } = req.body;
-    if (user.profileImageURL && !isValidUrl(user.profileImageURL)) {
-        throw new ExpressError("Invalid image URL provided", 400);
-    }
-    await User.findByIdAndUpdate(id, { ...user });
-    res.redirect(`/users/${id}`);
-}));
-
-
-// Delete User
-app.delete("/users/:id", catchAsync(async (req, res) => {
-    const { id } = req.params;
-    await User.findByIdAndDelete(id);
-    res.redirect("/users");
-}));
-
-app.post("/users/:id/reviews", validateReview, catchAsync(async (req,res) => {
-    const user = await User.findById(req.params.id);
-    const review = new Review(req.body.review);
-    user.reviews.push(review);
-    await review.save();
-    await user.save();
-    res.redirect(`/users/${user._id}`);
-}))
-
-app.delete("/users/:id/reviews/:reviewId", catchAsync(async (req, res) => {
-    const {id, reviewId} = req.params;
-    await User.findByIdAndUpdate(id, {$pull:{reviews:reviewId}});
-    await Review.findByIdAndDelete(reviewId);
-    res.redirect(`/users/${id}`);
-}));
 
 
 app.all('*', (req,res,next)=>{
