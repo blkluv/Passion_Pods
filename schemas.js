@@ -6,7 +6,7 @@ module.exports.userSchema = Joi.object({
         location: Joi.string().required(),
         email: Joi.string().email().required(),
         password: Joi.string().required(),
-        profileImageURL: Joi.string().uri().allow(""), 
+        profileImageURL: Joi.string(), 
         hobbies: Joi.string().required(),
         description: Joi.string().required(),
     }).required()

@@ -30,11 +30,12 @@ Router.get("/new", (req, res) => {
 // Create New User
 Router.post("/", validateUser, catchAsync(async (req, res, next) => {
     const { user } = req.body;
-    if (user.profileImageURL && !isValidUrl(user.profileImageURL)) {
-        throw new ExpressError("Invalid image URL provided", 400);
-    }
+    // if (user.profileImageURL && user.profileImageURL.trim() !== "" && !isValidUrl(user.profileImageURL)) {
+    //     throw new ExpressError("Invalid image URL provided", 400);
+    // }
     const newUser = new User(user);
     await newUser.save();
+    req.flash('success', "Successfully added a new user!!");
     res.redirect(`/users/${newUser._id}`);
 }));
 
@@ -43,7 +44,8 @@ Router.post("/", validateUser, catchAsync(async (req, res, next) => {
 Router.get("/:id", catchAsync(async (req, res) => {
     const user = await User.findById(req.params.id).populate('reviews');
     if (!user) {
-        return res.status(404).send("User not found");
+        req.flash('error', "Cannot find the user!!");
+        return res.redirect('/users');
     }
     res.render("users/show", { user });
 }));
@@ -52,7 +54,8 @@ Router.get("/:id", catchAsync(async (req, res) => {
 Router.get("/:id/edit", catchAsync(async (req, res) => {
     const user = await User.findById(req.params.id);
     if (!user) {
-        return res.status(404).send("User not found");
+        req.flash('error', "Cannot find the user!!");
+        return res.redirect('/users');
     }
     res.render("users/edit", { user });
 }));
@@ -65,6 +68,7 @@ Router.put("/:id", validateUser, catchAsync(async (req, res) => {
         throw new ExpressError("Invalid image URL provided", 400);
     }
     await User.findByIdAndUpdate(id, { ...user });
+    req.flash('success', "Successfully updated the user!!");
     res.redirect(`/users/${id}`);
 }));
 
@@ -73,6 +77,7 @@ Router.put("/:id", validateUser, catchAsync(async (req, res) => {
 Router.delete("/:id", catchAsync(async (req, res) => {
     const { id } = req.params;
     await User.findByIdAndDelete(id);
+    req.flash('success', "Aww, we deleted the user!!");
     res.redirect("/users");
 }));
 

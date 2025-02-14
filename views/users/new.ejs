@@ -30,7 +30,7 @@
             </div>
             <div class="mb-3">
                 <label class = "form-label" for="image">Profile Image URL</label>
-                <input class="form-control" type="text" id="image" name="user[profileImageURL]" required>
+                <input class="form-control" type="text" id="image" name="user[profileImageURL]">
                 <div class="valid-feedback">Looks Good!!</div>
             </div>
             <div class="mb-3">
@@ -46,23 +46,3 @@
     </div>
 </div>
 
-<script>
-    (() => {
-  'use strict'
-
-  // Fetch all the forms we want to apply custom Bootstrap validation styles to
-  const forms = document.querySelectorAll('.validated-form')
-
-  // Loop over them and prevent submission
-  Array.from(forms).forEach(form => {
-    form.addEventListener('submit', event => {
-      if (!form.checkValidity()) {
-        event.preventDefault()
-        event.stopPropagation()
-      }
-
-      form.classList.add('was-validated')
-    }, false)
-  })
-})()
-</script>
