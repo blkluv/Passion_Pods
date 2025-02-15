@@ -8,9 +8,13 @@ const flash = require("connect-flash");
 const ExpressError = require('./utils/ExpressError.js');
 require("dotenv").config();
 const methodOverride = require("method-override");
+const passport = require("passport");
+const LocalStrategy = require("passport-local");
+const Profile = require("./models/profile.js");
 
-const users = require("./routes/users.js");
-const reviews = require("./routes/review.js");
+const profileRoutes = require("./routes/profile.js");
+const usersRoutes = require("./routes/users.js");
+const reviewsRoutes = require("./routes/review.js");
 
 mongoose
     .connect(process.env.MONGO_URL)
@@ -37,15 +41,23 @@ const sessionConfig = {
 }
 app.use(session(sessionConfig));
 app.use(flash());
+app.use(passport.initialize());
+app.use(passport.session());
+passport.use(new LocalStrategy(Profile.authenticate()));
+
+passport.serializeUser(Profile.serializeUser());
+passport.deserializeUser(Profile.deserializeUser());
 
 app.use((req, res, next) => {
+    res.locals.currentUser = req.user;
     res.locals.success = req.flash('success') || "";
     res.locals.error = req.flash('error') || "";
     next();
 });
 
-app.use('/users',users);
-app.use('/users/:id/reviews',reviews);
+app.use('/', profileRoutes);
+app.use('/users',usersRoutes);
+app.use('/users/:id/reviews',reviewsRoutes);
 
 // Home Route
 app.get("/", (req, res) => {

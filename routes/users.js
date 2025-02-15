@@ -4,6 +4,7 @@ const catchAsync = require('../utils/catchAsync.js');
 const ExpressError = require('../utils/ExpressError.js');
 const User = require("../models/user.js");
 const {userSchema} = require('../schemas.js');
+const {isLoggedIn} = require('../middleware.js');
 
 const validateUser = (req, res, next) => {
     const {error} = userSchema.validate(req.body);
@@ -23,12 +24,12 @@ Router.get("/", catchAsync(async (req, res) => {
 }));
 
 // New User Form Route
-Router.get("/new", (req, res) => {
+Router.get("/new", isLoggedIn, (req, res) => {
     res.render("users/new");
 });
 
 // Create New User
-Router.post("/", validateUser, catchAsync(async (req, res, next) => {
+Router.post("/", isLoggedIn, validateUser, catchAsync(async (req, res, next) => {
     const { user } = req.body;
     // if (user.profileImageURL && user.profileImageURL.trim() !== "" && !isValidUrl(user.profileImageURL)) {
     //     throw new ExpressError("Invalid image URL provided", 400);
