@@ -9,6 +9,10 @@ const reviewSchema = new Schema({
         type: Number,
         required: true,
     },
+    author: {
+        type: Schema.Types.ObjectId,
+        ref: 'Profile',
+    },
 }, { timestamps: true });
 
 const Review = model("Review", reviewSchema); 

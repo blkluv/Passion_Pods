@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const Review = require("./review");
+const Profile = require('./profile');
 const { Schema, model } = mongoose; 
 
 const userSchema = new Schema({
@@ -24,6 +25,10 @@ const userSchema = new Schema({
     },
     description: {
         type: String,
+    },
+    author : {
+        type: Schema.Types.ObjectId,
+        ref: 'Profile',
     },
     reviews: [
         {

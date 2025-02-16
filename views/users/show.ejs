@@ -1,49 +1,69 @@
-<% layout('layouts/boilerplate')  %>
-<div class="row">
-    <div class="col-6 ">
-        <div class="card mb-3">
-            <img src="<%= user.profileImageURL %>" alt="Profile-Pic" class="card-img-top">
-            <div class="card-body">
-              <h5 class="card-title"><%= user.fullName %>!</h5>
-              <p class="card-text"><%= user.description %></p>
-            </div>
-            <ul class="list-group list-group-flush">
-              <li class="list-group-item text-muted"><%= user.location %></li>
-              <li class="list-group-item">Favourite Gender: <%= user.hobbies[0] %></li>
-            </ul>
-            <div class="card-body">
-              <a href="/users/<%= user._id %>/edit" class="card-link btn btn-info">Edit User</a>
-              <form class="d-inline" action="/users/<%= user._id %>?_method=DELETE" method="POST">
-                <button class="btn btn-danger">Delete Me!!</button>
-            </form>
-              <a href="/users" class="card-link btn btn-success">All Users</a>
-            </div>
-          </div>
-    </div>
-    <div class="col-6">
-      <h2>Leave a Review</h2>
-          <form action="/users/<%= user._id %>/reviews" method="POST" class="mb-3 validated-form" novalidate>
-            <div class="mb-3">
-              <label class="form-label" for="rating">Rating</label>
-              <input class="form-range" type="range" min="1" max="5" name="review[rating]" id="rating">
-            </div>
-            <div class="mb-3">
-              <label class="form-label" for="body">Review</label>
-              <textarea class="form-control" name="review[body]" id="body" cols="30" rows="3" required></textarea>
-              <div class="valid-feedback">Looks Good!!</div>      
-            </div>
-            <button class="btn btn-success">Submit</button>
-          </form>
-          <% for (let review of user.reviews) { %>
+<% layout('layouts/boilerplate') %>
+<div class="container">
+    <div class="row gx-4">
+        <div class="col-md-6">
             <div class="card mb-3">
-              <div class="card-body">
-                <h5 class="card-title">Rating: <%= review.rating %></h5>
-                <p class="card-text">Review: <%= review.body %></p>
-                <form action="/users/<%= user._id %>/reviews/<%= review._id %>?_method=DELETE" method="POST">
-                  <button class="btn btn-sm btn-danger">Delete!</button>
-                </form>
-              </div>
+                <img src="<%= user.profileImageURL %>" alt="Profile-Pic" class="card-img-top">
+                <div class="card-body">
+                    <h5 class="card-title"><%= user.fullName %>!</h5>
+                    <p class="card-text"><%= user.description %></p>
+                </div>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item text-muted"><%= user.location %></li>
+                    <li class="list-group-item text-muted">
+                        Submitted By: <%= (user.author && user.author.username) ? user.author.username : "Anonymous" %>
+                    </li>
+                    <li class="list-group-item">
+                        Favourite Hobby: <%= (user.hobbies && user.hobbies.length > 0) ? user.hobbies[0] : "Not specified" %>
+                    </li>
+                </ul>
+                <% if (currentUser && user.author && user.author.equals(currentUser._id)) { %>
+                <div class="card-body">
+                    <a href="/users/<%= user._id %>/edit" class="card-link btn btn-info">Edit User</a>
+                    <form class="d-inline" action="/users/<%= user._id %>?_method=DELETE" method="POST">
+                        <button class="btn btn-danger">Delete Me!!</button>
+                    </form>
+                </div>
+                <% } %>
+                <a href="/users" class="card-link btn btn-success">All Users</a>
             </div>
-          <% } %>
+        </div>
+
+        <div class="col-md-6">
+          <% if(currentUser){ %>
+            <h2>Leave a Review</h2>
+            <form action="/users/<%= user._id %>/reviews" method="POST" class="mb-3 validated-form" novalidate>
+                <div class="mb-3">
+                    <label class="form-label" for="rating">Rating</label>
+                    <input class="form-range" type="range" min="1" max="5" name="review[rating]" id="rating">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label" for="body">Review</label>
+                    <textarea class="form-control" name="review[body]" id="body" cols="30" rows="3" required></textarea>
+                    <div class="valid-feedback">Looks Good!!</div>
+                </div>
+                <button class="btn btn-success">Submit</button>
+            </form>
+            <% } %>
+            <% if (user.reviews && user.reviews.length > 0) { %>
+              <h3>Other's Reviews: </h3>
+                <% for (let review of user.reviews) { %>
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <h5 class="card-title">Rating: <%= review.rating %></h5>
+                        <h6 class="card-subtitle mb-2 text-muted">By: <%= (review.author && review.author.username) ? review.author.username : "Anonymous" %></h6>
+                        <p class="card-text">Review: <%= review.body %></p>
+                        <% if (currentUser && review.author && review.author.equals(currentUser._id)) { %>
+                        <form action="/users/<%= user._id %>/reviews/<%= review._id %>?_method=DELETE" method="POST">
+                            <button class="btn btn-sm btn-danger">Delete!</button>
+                        </form>
+                        <% } %>
+                    </div>
+                </div>
+                <% } %>
+            <% } else { %>
+                <p>No reviews yet.</p>
+            <% } %>
+        </div>
     </div>
 </div>
