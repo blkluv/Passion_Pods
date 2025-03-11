@@ -3,6 +3,9 @@ const Router = express.Router();
 const catchAsync = require('../utils/catchAsync.js');
 const {isLoggedIn, validateUser} = require('../middleware.js');
 const users = require('../controllers/users.js');
+const multer = require("multer");
+const {storage} = require("../cloudinary/index.js");
+const upload = multer({storage});
 
 // Users Index Route
 Router.get("/", catchAsync(users.index));
@@ -11,7 +14,10 @@ Router.get("/", catchAsync(users.index));
 Router.get("/new", isLoggedIn, users.renderNewForm);
 
 // Create New User
-Router.post("/", isLoggedIn, validateUser, catchAsync(users.createUser));
+Router.post("/", isLoggedIn, upload.array('image'), (req,res) => {
+    console.log(req.body, req.files);
+    res.send("IT WORKED!!");
+});
 
 // Show User Route
 Router.get("/:id", catchAsync(users.showUsers));

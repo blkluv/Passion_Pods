@@ -1,3 +1,6 @@
+if (process.env.NODE_ENV !== "production"){
+    require('dotenv').config();
+}
 const express = require("express");
 const app = express();
 const path = require("path");
@@ -6,7 +9,6 @@ const ejsMate = require("ejs-mate");
 const session = require("express-session");
 const flash = require("connect-flash");
 const ExpressError = require('./utils/ExpressError.js');
-require("dotenv").config();
 const methodOverride = require("method-override");
 const passport = require("passport");
 const LocalStrategy = require("passport-local");

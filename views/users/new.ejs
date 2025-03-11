@@ -2,7 +2,7 @@
 <div class="row">
     <h1 class="text-center">New User</h1>
     <div class="col-6 offset-3">
-        <form action="/users" method="post" novalidate class="validated-form">
+        <form action="/users" method="post" novalidate class="validated-form" enctype="multipart/form-data">
             <div class="mb-3">
                 <label class = "form-label" for="name">Full Name</label>
                 <input class="form-control" type="text" id="name" name="user[fullName]" required> <!-- Use 'fullName' -->
@@ -23,6 +23,7 @@
                 <input class="form-control" type="text" id="location" name="user[location]" required>
                 <div class="valid-feedback">Looks Good!!</div>
             </div>
+            <input type="file" name="image" id="" multiple>
             <div class="mb-3">
                 <label class = "form-label" for="image">Profile Image URL</label>
                 <input class="form-control" type="text" id="image" name="user[profileImageURL]">

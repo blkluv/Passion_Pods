@@ -2,6 +2,7 @@ const ExpressError = require('./utils/ExpressError.js');
 const {userSchema} = require('./schemas.js');
 const {reviewSchema} = require('./schemas.js');
 const Review = require("./models/review.js");
+
 module.exports = {
     isLoggedIn: (req, res, next) => {
         if (!req.isAuthenticated()) {
