@@ -3,6 +3,13 @@ const Review = require("./review");
 const Profile = require('./profile');
 const { Schema, model } = mongoose; 
 
+const ImgSchema = new Schema({
+    url: String, 
+    filename: String,
+});
+ImgSchema.virtual('thumbnail').get(function () {
+    return this.url ? this.url.replace('/upload', '/upload/w_200') : '';
+});
 const userSchema = new Schema({
     fullName: {
         type: String,
@@ -16,12 +23,7 @@ const userSchema = new Schema({
         type: String,
         required: true,
     },
-    profileImageURL: [
-        {
-            url: String, 
-            filename: String,
-        }
-    ],
+    profileImageURL: [ImgSchema],
     hobbies: {
         type: [String], 
         default: [],    
@@ -29,7 +31,7 @@ const userSchema = new Schema({
     description: {
         type: String,
     },
-    author : {
+    author: {
         type: Schema.Types.ObjectId,
         ref: 'Profile',
     },
@@ -39,7 +41,7 @@ const userSchema = new Schema({
             ref: 'Review',
         }
     ]
-}, { timestamps: true });
+}, { timestamps: true, toJSON: { virtuals: true }, toObject: { virtuals: true } }); 
 
 userSchema.post('findOneAndDelete', async function (doc) {
     if (doc) {
