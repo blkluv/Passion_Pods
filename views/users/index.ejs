@@ -7,18 +7,19 @@
         <% for (let user of users) { %>
             <!-- <li><a href="/users/<%= user._id %>"><%= user.fullName %></a></li>  -->
              <div class="card mb-3">
-                <div class="col-md-4">
-                    <img src="<%= user.profileImageURL %>" class="img-fluid" alt="">
-
-                </div>
-                <div class="col-md-8">
-                    <div class="card-body">
-                        <h5 class="card-title"><%= user.fullName %></h5>
-                        <p class="card-text"><%= user.description %></p>
-                        <p class="card-text">
-                            <small class="text-muted"><%= user.location %></small>
-                        </p>
-                        <a class="btn btn-primary" href="/users/<%= user._id %>">View <%= user.fullName %></a>
+                <div class="row">
+                    <div class="col-md-4">
+                        <img src="<%= user.profileImageURL[0].url %>" alt="Profile-Pic" class="card-img-top">
+                    </div>
+                    <div class="col-md-8">
+                        <div class="card-body">
+                            <h5 class="card-title"><%= user.fullName %></h5>
+                            <p class="card-text"><%= user.description %></p>
+                            <p class="card-text">
+                                <small class="text-muted"><%= user.location %></small>
+                            </p>
+                            <a class="btn btn-primary" href="/users/<%= user._id %>">View <%= user.fullName %></a>
+                        </div>
                     </div>
                 </div>
              </div>

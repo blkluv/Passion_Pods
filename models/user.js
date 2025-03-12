@@ -16,9 +16,12 @@ const userSchema = new Schema({
         type: String,
         required: true,
     },
-    profileImageURL: {
-        type: String,
-    },
+    profileImageURL: [
+        {
+            url: String, 
+            filename: String,
+        }
+    ],
     hobbies: {
         type: [String], 
         default: [],    

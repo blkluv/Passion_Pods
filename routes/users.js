@@ -14,10 +14,7 @@ Router.get("/", catchAsync(users.index));
 Router.get("/new", isLoggedIn, users.renderNewForm);
 
 // Create New User
-Router.post("/", isLoggedIn, upload.array('image'), (req,res) => {
-    console.log(req.body, req.files);
-    res.send("IT WORKED!!");
-});
+Router.post("/", isLoggedIn, upload.array('image'), validateUser, catchAsync(users.createUser));
 
 // Show User Route
 Router.get("/:id", catchAsync(users.showUsers));
@@ -26,9 +23,9 @@ Router.get("/:id", catchAsync(users.showUsers));
 Router.get("/:id/edit", isLoggedIn, catchAsync(users.renderEditForm));
 
 // Update User
-Router.put("/:id", validateUser, catchAsync(users.updateUsers));
+Router.put("/:id", isLoggedIn, upload.array('image'), validateUser);
 
 // Delete User
-Router.delete("/:id", catchAsync(users.deleteUsers));
+Router.delete("/:id", isLoggedIn,  catchAsync(users.deleteUsers));
 
 module.exports = Router;

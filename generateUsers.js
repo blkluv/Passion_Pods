@@ -27,8 +27,14 @@ const generateRandomUsers = async () => {
             password: faker.internet.password(),
             salt: faker.string.alphanumeric(10),
             hobbies: Array.from(hobbiesSet), 
-            profileImageURL: `https://picsum.photos/400?random=${Math.random()}`,
-            description: "lorem-ipsum blah blah blah................"
+            // profileImageURL: `https://picsum.photos/400?random=${Math.random()}`,
+            description: "lorem-ipsum blah blah blah................",
+            profileImageURL: [
+                {
+                  url: 'https://res.cloudinary.com/devrmalgl/image/upload/v1741673004/Passion_Pods/lkvqmiuqankdr0wa4s3x.jpg',
+                  filename: 'Passion_Pods/lkvqmiuqankdr0wa4s3x',
+                }
+            ]
         };
     });
 
