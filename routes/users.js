@@ -23,9 +23,12 @@ Router.get("/:id", catchAsync(users.showUsers));
 Router.get("/:id/edit", isLoggedIn, catchAsync(users.renderEditForm));
 
 // Update User
-Router.put("/:id", isLoggedIn, upload.array('image'), validateUser);
+Router.put("/:id", isLoggedIn, upload.array('image'), validateUser, catchAsync(users.updateUsers));
 
 // Delete User
 Router.delete("/:id", isLoggedIn,  catchAsync(users.deleteUsers));
+
+// Get matchmaking results for a user
+Router.get("/:id/matches", isLoggedIn, catchAsync(users.getMatches));
 
 module.exports = Router;

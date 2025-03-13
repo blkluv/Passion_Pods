@@ -1,0 +1,17 @@
+<% layout('layouts/boilerplate') %>
+<h1>Matches for <%= currentUser.fullName %></h1>
+
+<% if (topMatches.length === 0) { %>
+   <p>No matches found</p>
+<% } else { %>
+   <ul>
+     <% topMatches.forEach(match => { %>
+         <li>
+           <a href="/users/<%= match.user._id %>"><%= match.user.fullName %></a>
+           - Match Score: <%= match.score %>
+         </li>
+     <% }); %>
+   </ul>
+<% } %>
+
+<a href="/users/<%= currentUser._id %>">Back to your profile</a>
